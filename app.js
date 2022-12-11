@@ -21,15 +21,17 @@ const dotenv = require('dotenv').config()
 
 const { contentType } = require('express/lib/response');
 
+
+
 const jsforce = require("jsforce");
 const conn = new jsforce.Connection({
-    // you can change loginUrl to connect to sandbox or prerelease env.
-    // loginUrl : "https://test.salesforce.com"
+    // you can change loginUrl to connect to sandbox or tprerelease env.
+    loginUrl: "https://login.salesforce.com/"
 });
 // Log in with basic SOAP login (see documentation for other auth options)
-conn.login(
-    process.env.USERNAME,
-    process.env.PASSWORD + process.env.SECURITY_TOKEN,
+var token = 'Y25QT45SVi3rQ2Luu17mrMz51';
+var pwd = 'belkis2022';
+conn.login('aroua.sana@wise-koala-3zabbg.com', pwd + token,
     (err, res) => {
         if (err) {
             return console.error("Failed to log in to Salesforce: ", err);
@@ -49,11 +51,6 @@ conn.login(
         });
     }
 );
-
-mongoose.connect(process.env.DATABASE)
-    .then(() => console.log("good"))
-    .catch(() => console.log("not good"));
-
 
 app.use(logger('dev'));
 app.use(express.json());
