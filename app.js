@@ -21,6 +21,10 @@ const dotenv = require('dotenv').config()
 
 const { contentType } = require('express/lib/response');
 
+mongoose.connect(process.env.DATABASE)
+    .then(() => console.log("good"))
+    .catch(() => console.log("not good"));
+
 
 
 const jsforce = require("jsforce");
@@ -29,29 +33,9 @@ const conn = new jsforce.Connection({
     loginUrl: "https://login.salesforce.com/"
 });
 // Log in with basic SOAP login (see documentation for other auth options)
-var token = 'Y25QT45SVi3rQ2Luu17mrMz51';
-var pwd = 'belkis2022';
-conn.login('aroua.sana@wise-koala-3zabbg.com', pwd + token,
-    (err, res) => {
-        if (err) {
-            return console.error("Failed to log in to Salesforce: ", err);
-        }
-        console.log("Successfully logged in!");
-        // Run a SOQL query
-        conn.query("SELECT Id, Name FROM Account LIMIT 5", (err, result) => {
-            if (err) {
-                return console.error("Failed to run SOQL query: ", err);
-            }
-            // Display query results
-            const { records } = result;
-            console.log(`Fetched ${records.length} records:`);
-            records.forEach(record => {
-                console.log(`- ${record.Name} (${record.Id})`);
-            });
-        });
-    }
-);
-
+if (conn) {
+    console.log('salesforce connecte');
+}
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
