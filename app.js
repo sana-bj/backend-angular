@@ -26,6 +26,16 @@ mongoose.connect(process.env.DATABASE)
     .catch(() => console.log("not good"));
 
 
+
+const jsforce = require("jsforce");
+const conn = new jsforce.Connection({
+    // you can change loginUrl to connect to sandbox or tprerelease env.
+    loginUrl: "https://login.salesforce.com/"
+});
+// Log in with basic SOAP login (see documentation for other auth options)
+if (conn) {
+    console.log('salesforce connecte');
+}
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

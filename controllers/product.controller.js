@@ -3,9 +3,55 @@ const Product = require('../models/product.model')
 
 const fs = require('fs')
 const { json } = require('express/lib/response')
+const jsforce = require("jsforce");
+
+exports.list = (req, res) => {
+
+    console.log('ooooooooooooooooooooo');
+    var pwd = req.query.password
+    var email = req.query.email;
+    console.log(pwd);
+    const conn = new jsforce.Connection({
+
+        loginUrl: "https://login.salesforce.com/"
+    });
+    var token = 'Y25QT45SVi3rQ2Luu17mrMz51';
 
 
-exports.list = (req, res, next) => {
+    var auth = true;
+    conn.login(email, pwd + token,
+        (err, result) => {
+            if (err) {
+                auth = false;
+                return res.status(400).json({
+                    status: 400,
+                    message: 'user not foun'
+
+                })
+            }
+            //console.log(res);
+            console.log("Successfully logged in!");
+            conn.query("SELECT Id, Name,price__c,image__c,Description__c FROM product_shop__c LIMIT 30", (err, result) => {
+                if (err) {
+                    return console.error("Failed to run SOQL query: ", err);
+                }
+                // Display query results
+                const { records } = result;
+
+                console.log(`Fetched ${records.length} records:`);
+                records.forEach(record => {
+                    console.log(`- ${record.Name} (${record.image__c})`);
+                });
+                return res.status(200).json(records);
+            });
+
+        }
+    );
+
+}
+
+
+exports.list1 = (req, res, next) => {
     Product.find()
         .then((product) => {
             //res.render('index', { title: 'products' ,'products' : product}); // renvoie articles vers twig

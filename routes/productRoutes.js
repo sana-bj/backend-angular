@@ -5,7 +5,7 @@ const auth = require('../middlewares/auth')
 var router = express.Router();
 
 /* GET home page. */
-router.get('/', auth, controllerProduct.list);
+router.get('/list', controllerProduct.list);
 // get article by id 
 router.get('/:id', auth, controllerProduct.show)
 
