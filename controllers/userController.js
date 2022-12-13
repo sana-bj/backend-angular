@@ -107,7 +107,7 @@ module.exports = {
         console.log(req.body);
         var auth = true;
         conn.login(email, pwd + token,
-            (err) => {
+            (err, result) => {
                 if (err) {
                     auth = false;
                     return res.status(400).json({
@@ -120,7 +120,13 @@ module.exports = {
                 console.log("Successfully logged in!");
                 return res.status(200).json({
                         status: 200,
-                        message: 'user connecte'
+                        message: 'user connecte',
+                        userId: result.id,
+                        pwd: req.body.password,
+                        email: req.body.email,
+                        token: jsonwebtoken.sign({ userId: result.id },
+                            process.env.TOKEN_SECRET, { expiresIn: '24h' })
+
 
                     })
                     // Run a SOQL query
